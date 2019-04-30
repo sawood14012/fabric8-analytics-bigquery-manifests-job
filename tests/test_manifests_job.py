@@ -1,5 +1,5 @@
 import pytest
-import mock
+from unittest import mock
 import json
 import shutil
 import pathlib
@@ -9,7 +9,7 @@ import uuid
 import sqlite3
 
 from rudra.data_store.local_data_store import LocalDataStore
-
+from src import manifests_job
 
 class MockDB:
 
@@ -126,12 +126,11 @@ class MockS3(LocalDataStore):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_maven(_mock_bigquery_obj):
-    from rudra.data_store.bigquery.maven_bigquery import MavenBigQuery, MavenBQDataProcessing
-    _mvn_ins = MavenBigQuery()
+    _mvn_ins = manifests_job.mvn_bq.MavenBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _mvn_ins.query = "select id, name, content from manifests\
             where name like '%pom.xml'"
-    _client = MavenBQDataProcessing(_mvn_ins, s3_client=s3_client)
+    _client = manifests_job.mvn_bq.MavenBQDataProcessing(_mvn_ins, s3_client=s3_client)
     return _client, s3_client
 
 
@@ -139,12 +138,11 @@ def _data_process_client_maven(_mock_bigquery_obj):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_npm(_mock_bigquery_obj):
-    from rudra.data_store.bigquery.npm_bigquery import NpmBigQuery, NpmBQDataProcessing
-    _npm_ins = NpmBigQuery()
+    _npm_ins = manifests_job.npm_bq.NpmBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _npm_ins.query = "select id, name, content from manifests\
             where name like '%package.json'"
-    _client = NpmBQDataProcessing(_npm_ins, s3_client=s3_client)
+    _client = manifests_job.npm_bq.NpmBQDataProcessing(_npm_ins, s3_client=s3_client)
     return _client, s3_client
 
 
@@ -152,12 +150,12 @@ def _data_process_client_npm(_mock_bigquery_obj):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_pypi(_mock_bigquery_obj):
-    from rudra.data_store.bigquery.pypi_bigquery import PyPiBigQuery, PyPiBigQueryDataProcessing
-    _pypi_ins = PyPiBigQuery()
+    
+    _pypi_ins = manifests_job.pypi_bq.PyPiBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _pypi_ins.query = "select id, name, content from manifests\
             where name like '%requirements.txt'"
-    _client = PyPiBigQueryDataProcessing(_pypi_ins, s3_client=s3_client)
+    _client = manifests_job.pypi_bq.PyPiBigQueryDataProcessing(_pypi_ins, s3_client=s3_client)
     return _client, s3_client
 
 
