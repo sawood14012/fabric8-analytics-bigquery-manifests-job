@@ -4,7 +4,7 @@ The main script for the Big Query manifests retrieval
 """
 
 from rudra import logger
-from manifests_job import ManifestsJob
+import manifests_job as mj
 import time
 
 
@@ -13,7 +13,7 @@ def main():
       Retrieve, process and store the manifest files from Big Query
     """
     logger.info('Initializing ManifestsJob object')
-    mjob = ManifestsJob()
+    mjob = mj.ManifestsJob()
     start = time.monotonic()
 
     logger.info('Starting Manifest Job')

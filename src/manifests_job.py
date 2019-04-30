@@ -13,7 +13,7 @@ from rudra.data_store.bigquery import maven_bigquery as mvn_bq
 from rudra.data_store.bigquery import npm_bigquery as npm_bq
 from rudra.data_store.bigquery import pypi_bigquery as pypi_bq
 from rudra.data_store.aws import AmazonS3
-from config import cloud_constants as cc
+from .config import cloud_constants as cc
 
 
 class ManifestsJob:
@@ -57,7 +57,8 @@ class ManifestsJob:
         logger.info('Starting job for maven Big Query Manifests')
         mvn_job = mvn_bq.MavenBQDataProcessing(
             big_query_instance=mvn_bq_builder,
-            s3_client=self.s3_client)
+            s3_client=self.s3_client,
+            file_name=cc.MANIFEST_FILENAME)
         mvn_job.process()
         logger.info('Completed job for maven Big Query Manifests')
 
@@ -77,7 +78,8 @@ class ManifestsJob:
         logger.info('Starting job for npm Big Query Manifests')
         npm_job = npm_bq.NpmBQDataProcessing(
             big_query_instance=npm_bq_builder,
-            s3_client=self.s3_client)
+            s3_client=self.s3_client,
+            file_name=cc.MANIFEST_FILENAME)
         npm_job.process()
         logger.info('Completed job for npm Big Query Manifests')
 
@@ -103,6 +105,7 @@ class ManifestsJob:
         logger.info('Starting job for pypi Big Query Manifests')
         pypi_job = pypi_bq.PyPiBigQueryDataProcessing(
             big_query_instance=pypi_bq_builder,
-            s3_client=self.s3_client)
+            s3_client=self.s3_client,
+            file_name=cc.MANIFEST_FILENAME)
         pypi_job.process(validate=True)
         logger.info('Completed job for pypi Big Query Manifests')
