@@ -13,32 +13,33 @@ from rudra.data_store.bigquery import maven_bigquery as mvn_bq
 from rudra.data_store.bigquery import npm_bigquery as npm_bq
 from rudra.data_store.bigquery import pypi_bigquery as pypi_bq
 from rudra.data_store.aws import AmazonS3
-from .config import cloud_constants as cc
+from src.config import cloud_constants as cc
 
 
 class ManifestsJob:
-    """
-      The ManifestsJob class gets the manifests data from Google Bigquery
-      and stores it in AWS S3 sequentially for each ecosystem
+    """The ManifestsJob class gets the manifests data from Google Bigquery.
+
+    After data retrieval and processing, it is in AWS S3 sequentially
+    for each ecosystem.
     """
 
-    def __init__(self, local_dev=cc.USE_CLOUD_SERVICES):
-        """
-          Initializes the ManifestsJob object
-        """
-        self.local_dev = local_dev
+    def __init__(self, cloud_services=cc.USE_CLOUD_SERVICES):
+        """Initialize the ManifestsJob object."""
+        self.local_dev = not cloud_services
         self.bucket_name = cc.S3_BUCKET_NAME
         self.s3_client = AmazonS3(
+            region_name=cc.AWS_S3_REGION,
             bucket_name=self.bucket_name,
             aws_access_key_id=cc.AWS_S3_ACCESS_KEY_ID,
             aws_secret_access_key=cc.AWS_S3_SECRET_ACCESS_KEY,
-            local_dev=True
+            local_dev=self.local_dev
         )
 
     def run_maven_job(self):
-        """
-          Runs the maven big query processing job which retrieves and
-          stores manifests for github projects from the java ecosystem
+        """Run the maven big query processing job.
+
+        This job retrieves and stores manifests for
+        github projects based on the java ecosystem.
         """
         mvn_bq_builder = mvn_bq.MavenBigQuery()
         mvn_bq_builder.query = """
@@ -63,9 +64,10 @@ class ManifestsJob:
         logger.info('Completed job for maven Big Query Manifests')
 
     def run_npm_job(self):
-        """
-          Runs the npm big query processing job which retrieves and
-          stores manifests for github projects from the node.js ecosystem
+        """Run the npm big query processing job.
+
+        This job retrieves and stores manifests for
+        github projects based on the node.js ecosystem.
         """
         npm_bq_builder = npm_bq.NpmBigQuery()
         npm_bq_builder.query = """
@@ -84,9 +86,10 @@ class ManifestsJob:
         logger.info('Completed job for npm Big Query Manifests')
 
     def run_pypi_job(self):
-        """
-          Runs the pypi big query processing job which retrieves and
-          stores manifests for github projects from the python ecosystem
+        """Run the pypi big query processing job.
+
+        This job retrieves and stores manifests for
+        github projects based on the python ecosystem.
         """
         pypi_bq_builder = pypi_bq.PyPiBigQuery()
         pypi_bq_builder.query = """
