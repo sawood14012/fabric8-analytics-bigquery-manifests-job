@@ -12,7 +12,7 @@ RUN yum install -y epel-release &&\
 WORKDIR ${APP_DIR}
 
 RUN pip3 install --upgrade pip
-RUN pip3 install git+https://github.com/fabric8-analytics/fabric8-analytics-rudra#egg=rudra
+RUN pip3 install git+https://github.com/fabric8-analytics/fabric8-analytics-rudra.git@e59b708b22e094f356c218debdfa287f142337d8#egg=rudra
 
 COPY ./src ${APP_DIR}/src
 COPY ./requirements.txt .
