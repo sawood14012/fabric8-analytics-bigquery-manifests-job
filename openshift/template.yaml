@@ -56,7 +56,7 @@ parameters:
     displayName: Schedule
     required: true
     name: CRON_SCHEDULE
-    value: "*/10 * * * *"
+    value: "0 0 1 */1 *"
 
   - description: CPU request
     displayName: CPU request
