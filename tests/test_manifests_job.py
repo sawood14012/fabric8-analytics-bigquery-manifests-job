@@ -159,6 +159,7 @@ class MockS3(LocalDataStore):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_maven(_mock_bigquery_obj):
+    """Mock manifest processing for maven."""
     _mvn_ins = manifests_job.mvn_bq.MavenBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _mvn_ins.query = "select id, name, content from manifests\
@@ -172,6 +173,7 @@ def _data_process_client_maven(_mock_bigquery_obj):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_npm(_mock_bigquery_obj):
+    """Mock manifest processing for npm."""
     _npm_ins = manifests_job.npm_bq.NpmBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _npm_ins.query = "select id, name, content from manifests\
@@ -185,7 +187,7 @@ def _data_process_client_npm(_mock_bigquery_obj):
 @mock.patch('rudra.data_store.bigquery.base.bigquery',
             new_callable=MockBigQuery)
 def _data_process_client_pypi(_mock_bigquery_obj):
-
+    """Mock manifest processing for pypi."""
     _pypi_ins = manifests_job.pypi_bq.PyPiBigQuery()
     s3_client = MockS3(tempfile.mkdtemp())
     _pypi_ins.query = "select id, name, content from manifests\
