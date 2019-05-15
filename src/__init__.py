@@ -1,4 +1,2 @@
 # -*- coding: utf-8 -*-
-"""
-Main source directory.
-"""
+"""Main source directory."""
