@@ -49,11 +49,6 @@ objects:
                     configMapKeyRef:
                       name: bayesian-config
                       key: aws-default-region
-                - name: GOOGLE_APPLICATION_CREDENTIALS
-                  valueFrom:
-                    secretKeyRef:
-                      key: bq-key
-                      name: bigquery-access
                 - name: GCP_TYPE
                   valueFrom:
                     secretKeyRef:
