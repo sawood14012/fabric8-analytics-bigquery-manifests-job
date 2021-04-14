@@ -58,27 +58,28 @@ here=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 
 export PYTHONPATH=${here}/
 
-pip3 install --upgrade pip
+# Need to use 19.2.3 version only as some of packages are deprecated in latest PIP version.
+pip3 install pip==19.2.3
 pip3 install -r requirements.txt
-pip3 install --ignore-installed git+https://github.com/fabric8-analytics/fabric8-analytics-rudra.git@4cfac114208cd0f062a1d7ab0e03bb6bc7a490a3#egg=rudra
+pip3 install -r requirements_test.txt
 
 
 echo "*****************************************"
 echo "*** Cyclomatic complexity measurement ***"
 echo "*****************************************"
-radon cc -s -a -i venv_test .
+radon cc -s -a -e "venv/*,venv_test/*" .
 
 echo "*****************************************"
 echo "*** Maintainability Index measurement ***"
 echo "*****************************************"
-radon mi -s -i venv_test .
+radon mi -s -e "venv/*,venv_test/*" .
 
 echo "*****************************************"
 echo "*** Unit tests ***"
 echo "*****************************************"
 
 echo "Starting test suite"
-DISABLE_AUTHENTICATION=1 PYTHONDONTWRITEBYTECODE=1 python "$(which pytest)" --cov=./src/ --cov-report term-missing --cov-fail-under=$COVERAGE_THRESHOLD -vv ./tests/
+DISABLE_AUTHENTICATION=1 PYTHONDONTWRITEBYTECODE=1 python "$(which pytest)" --cov=src/ --cov-report term-missing --cov-fail-under=$COVERAGE_THRESHOLD -vv tests/
 printf "%stests passed%s\n\n" "${GREEN}" "${NORMAL}"
 
 `which codecov` --token=5c0f0ca6-c3aa-407f-9b61-07830d9325e5

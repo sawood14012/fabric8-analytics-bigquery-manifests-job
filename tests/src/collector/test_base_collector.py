@@ -14,23 +14,18 @@
 #
 # Author: Dharmendra G Patel <dhpatel@redhat.com>
 #
-"""The main script for the Big Query manifests retrieval."""
-
-import time
-from rudra import logger
-from src.job.data_job import DataJob
+"""Test base collector class."""
+import pytest
+from src.collector.base_collector import BaseCollector
 
 
-def main():
-    """Retrieve, process and store the manifest files from Big Query."""
-    logger.info('Initializing Big query object')
-    dataJob = DataJob()
+class TestBaseCollector:
+    """Base collector test cases."""
 
-    logger.info('Starting big query job')
-    start = time.monotonic()
-    dataJob.run()
-    logger.info('Finished big query job, time taken: %f', time.monotonic() - start)
+    def test_parse_and_collect(self):
+        """Test single dep."""
+        bc = BaseCollector("ecosystem")
+        with pytest.raises(Exception) as e:
+            bc.parse_and_collect(None, True)
 
-
-if __name__ == '__main__':
-    main()
+        assert str(e.value) == 'Missing parse_and_collect() method implementation!!'

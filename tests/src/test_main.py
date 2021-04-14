@@ -14,23 +14,29 @@
 #
 # Author: Dharmendra G Patel <dhpatel@redhat.com>
 #
-"""The main script for the Big Query manifests retrieval."""
-
+"""Test main class."""
 import time
-from rudra import logger
-from src.job.data_job import DataJob
+import unittest
+from unittest import mock
+from unittest.mock import patch
+from src.main import main
 
 
-def main():
-    """Retrieve, process and store the manifest files from Big Query."""
-    logger.info('Initializing Big query object')
-    dataJob = DataJob()
+class MockDataJob(mock.Mock):
+    """Mock Data job class."""
 
-    logger.info('Starting big query job')
-    start = time.monotonic()
-    dataJob.run()
-    logger.info('Finished big query job, time taken: %f', time.monotonic() - start)
+    def run(self):
+        """Process bg data."""
+        time.sleep(1)
 
 
-if __name__ == '__main__':
-    main()
+class TestMain(unittest.TestCase):
+    """Main function unit test cases."""
+
+    @patch('src.main.DataJob', new_callable=MockDataJob)
+    def test_main(self, _mdp):
+        """Execute main function to trigger big query data update."""
+        try:
+            main()
+        except Exception:
+            assert False, 'Exception raised'
